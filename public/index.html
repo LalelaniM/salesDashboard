@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ERPLY Daily Sales Report</title>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>ERPLY Daily Sales Report</h1>
+
+    <div class="date-box">
+
+        <strong>Today's Date:</strong>
+
+        <span id="todayDate"></span>
+
+    </div>
+
+    <button id="showReportBtn">
+
+        Show Report
+
+    </button>
+
+    <div id="dashboard" class="dashboard hidden">
+
+    <div class="card">
+        <h3>Total Sales</h3>
+        <span id="totalSales">R 0.00</span>
+    </div>
+
+    <div class="card">
+        <h3>Total Qty Sold</h3>
+        <span id="totalQty">0</span>
+    </div>
+
+    <div class="card">
+        <h3>Transactions</h3>
+        <span id="totalTransactions">0</span>
+    </div>
+
+    <div class="card">
+        <h3>Average Sale</h3>
+        <span id="averageSale">R 0.00</span>
+    </div>
+
+</div>
+
+    <div id="loading" class="loading hidden">
+
+        Compiling sales report...
+
+    </div>
+
+    <div id="error" class="error hidden"></div>
+
+    <div id="reportContainer">
+
+        <div class="placeholder">
+
+            Click <strong>Show Report</strong> to generate today's sales report.
+
+        </div>
+
+    </div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+
+</html>
