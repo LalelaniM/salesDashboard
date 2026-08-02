@@ -1,6 +1,8 @@
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
+const XLSX = require("xlsx");
+const path = require("path");
 
 const app = express();
 const PORT = 3000;
@@ -19,6 +21,7 @@ const CLIENT_CODE = process.env.CLIENT_CODE;
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;
 const ERPLY_URL = process.env.ERPLY_URL;
+
 
 let sessionKey = null;
 let sessionExpiry = 0;
@@ -142,6 +145,123 @@ async function downloadCSV(url) {
     return response.data;
 
 }
+function parseCSV(text) {
+
+    const rows = [];
+
+    let row = [];
+
+    let value = "";
+
+    let inQuotes = false;
+
+    for (let i = 0; i < text.length; i++) {
+
+        const c = text[i];
+
+        if (c === '"') {
+
+            if (inQuotes && text[i + 1] === '"') {
+
+                value += '"';
+
+                i++;
+
+            }
+            else {
+
+                inQuotes = !inQuotes;
+
+            }
+
+        }
+
+        else if (c === "," && !inQuotes) {
+
+            row.push(value);
+
+            value = "";
+
+        }
+
+        else if ((c === "\n" || c === "\r") && !inQuotes) {
+
+            if (value !== "" || row.length > 0) {
+
+                row.push(value);
+
+                rows.push(row);
+
+            }
+
+            row = [];
+
+            value = "";
+
+            if (c === "\r" && text[i + 1] === "\n") {
+                i++;
+            }
+
+        }
+
+        else {
+
+            value += c;
+
+        }
+
+    }
+
+    if (value !== "" || row.length > 0) {
+
+        row.push(value);
+
+        rows.push(row);
+
+    }
+
+    return rows;
+
+}
+function getTotalSales(csv) {
+
+    const rows = parseCSV(csv);
+
+    if (rows.length < 2) {
+        return 0;
+    }
+
+    const headers = rows[0].map(h =>
+        h.replace(/"/g, "").trim()
+    );
+
+    const salesIndex =
+        headers.indexOf("SALES_WITH_VAT_TOTAL");
+
+    if (salesIndex === -1) {
+        console.log("SALES_WITH_VAT_TOTAL column not found.");
+        return 0;
+    }
+
+    const totalRow = rows.find(row =>
+        row.some(cell =>
+            cell.trim().toUpperCase() === "TOTAL"
+        )
+    );
+
+    if (!totalRow) {
+        console.log("TOTAL row not found.");
+        return 0;
+    }
+
+    const totalSales =
+        parseFloat(totalRow[salesIndex]) || 0;
+
+    
+
+    return totalSales;
+
+}
 
 /*
 ====================================================
@@ -149,11 +269,27 @@ async function downloadCSV(url) {
 ====================================================
 */
 
-async function getSalesReport(reportType) {
+function formatDate(date) {
+
+    const year = date.getFullYear();
+
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+
+    const day = String(date.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+async function getSalesReport(reportType, dateStart = null, dateEnd = null) {
 
 const sessionKey = await verifyUser();
 
-const reportDate = today();
+const todayDate = today();
+
+dateStart = dateStart || todayDate;
+dateEnd = dateEnd || todayDate;
 
 const params = new URLSearchParams();
 
@@ -162,8 +298,8 @@ params.append("sessionKey", sessionKey);
 
 params.append("request", "getSalesReport");
 
-params.append("dateStart", reportDate);
-params.append("dateEnd", reportDate);
+params.append("dateStart", dateStart);
+params.append("dateEnd", dateEnd);
 
 params.append("warehouseID", "1");
 params.append("byStockOfficeID", "1");
@@ -205,7 +341,50 @@ const response = await axios.post(
     return csv;
 
 }
+function getTargets() {
 
+    const workbook = XLSX.readFile(
+        path.join(
+            __dirname,
+            "targets",
+            "TargetSheet.xlsx"
+        )
+    );
+
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    const data = XLSX.utils.sheet_to_json(sheet, {
+        header: 1
+    });
+    //console.log(data);
+
+    // Monthly target is in B3
+    const monthlyTarget = data[2][1];
+
+    // Get today's day number (1-31)
+    const today = new Date().getDate();
+
+    let dailyTarget = 0;
+
+    // Daily targets start on row 5 (index 4)
+    for (let i = 4; i < data.length; i++) {
+
+        if (Number(data[i][1]) === today) {
+
+            dailyTarget = data[i][2];
+            break;
+
+        }
+
+    }
+   
+
+    return {
+        monthlyTarget,
+        dailyTarget
+    };
+
+}
 /*
 ====================================================
     API
@@ -220,9 +399,40 @@ app.get("/api/report", async (req, res) => {
 
 const cashierCSV = await getSalesReport("SALES_BY_CASHIER");
 
+// Month To Date dates
+const now = new Date();
+
+const monthStart = formatDate(
+    new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        1
+    )
+);
+
+const monthEnd = formatDate(now);
+
+
+const monthToDateCSV = await getSalesReport(
+    "SALES_BY_PRODUCT",
+    monthStart,
+    monthEnd
+);
+const monthToDateSales = getTotalSales(monthToDateCSV);
+const targets = getTargets();
+
 res.json({
+
     productReport: productCSV,
-    cashierReport: cashierCSV
+
+    cashierReport: cashierCSV,
+
+    monthToDateSales,
+
+    monthlyTarget: targets.monthlyTarget,
+
+    dailyTarget: targets.dailyTarget
+
 });
 
     }

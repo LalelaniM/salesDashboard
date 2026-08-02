@@ -41,10 +41,12 @@ buildReports(
     reports.cashierReport
 );
 
-// Update the dashboard after the tables are built
 updateDashboard(
     reports.productReport,
-    reports.cashierReport
+    reports.cashierReport,
+    reports.monthToDateSales,
+    reports.monthlyTarget,
+    reports.dailyTarget
 );
 
     }
@@ -284,59 +286,138 @@ function createTableSection(title, csv, hiddenColumns) {
 
 }
 
-function updateDashboard(productCSV, cashierCSV) {
+function updateDashboard(
+    productCSV,
+    cashierCSV,
+    monthToDateSales,
+    monthlyTarget,
+    dailyTarget
+) {
 
     const dashboard = document.getElementById("dashboard");
     dashboard.classList.remove("hidden");
 
-    // -------------------------
+    // ==========================
     // PRODUCT REPORT
-    // -------------------------
+    // ==========================
 
     const productRows = parseCSV(productCSV);
-    const productHeaders = productRows[0].map(h => h.replace(/"/g, "").trim());
 
-    const qtyIndex = productHeaders.indexOf("SOLD_QUANTITY");
-    const salesIndex = productHeaders.indexOf("SALES_WITH_VAT_TOTAL");
+    if (productRows.length < 2) return;
 
-    const productTotal = productRows.find(row =>
-        row.some(cell => cell.trim().toUpperCase() === "TOTAL")
+    const productHeaders = productRows[0].map(h =>
+        h.replace(/"/g, "").trim()
     );
 
-    let totalQty = 0;
+    const qtyIndex =
+        productHeaders.indexOf("SOLD_QUANTITY");
+
+    const salesIndex =
+        productHeaders.indexOf("SALES_WITH_VAT_TOTAL");
+
+    const productTotal = productRows.find(row =>
+        row.some(cell =>
+            cell.trim().toUpperCase() === "TOTAL"
+        )
+    );
+
     let totalSales = 0;
+    let totalQty = 0;
 
     if (productTotal) {
-        totalQty = parseFloat(productTotal[qtyIndex]) || 0;
-        totalSales = parseFloat(productTotal[salesIndex]) || 0;
+
+        totalSales =
+            parseFloat(productTotal[salesIndex]) || 0;
+
+        totalQty =
+            parseFloat(productTotal[qtyIndex]) || 0;
+
     }
 
-    // -------------------------
+    // ==========================
     // CASHIER REPORT
-    // -------------------------
+    // ==========================
 
     const cashierRows = parseCSV(cashierCSV);
-    const cashierHeaders = cashierRows[0].map(h => h.replace(/"/g, "").trim());
 
-    const salesCountIndex = cashierHeaders.indexOf("NUMBER_OF_SALES");
+    const cashierHeaders = cashierRows[0].map(h =>
+        h.replace(/"/g, "").trim()
+    );
+
+    const transactionIndex =
+        cashierHeaders.indexOf("NUMBER_OF_SALES");
 
     const cashierTotal = cashierRows.find(row =>
-        row.some(cell => cell.trim().toUpperCase() === "TOTAL")
+        row.some(cell =>
+            cell.trim().toUpperCase() === "TOTAL"
+        )
     );
 
     let totalTransactions = 0;
 
     if (cashierTotal) {
-        totalTransactions = parseFloat(cashierTotal[salesCountIndex]) || 0;
+
+        totalTransactions =
+            parseFloat(cashierTotal[transactionIndex]) || 0;
+
     }
+
+    // ==========================
+    // CALCULATIONS
+    // ==========================
 
     const averageSale =
         totalTransactions > 0
             ? totalSales / totalTransactions
             : 0;
 
+            const variance = totalSales - Number(dailyTarget);
+
+const percentToTarget =
+    Number(dailyTarget) > 0
+        ? (totalSales / Number(dailyTarget)) * 100
+        : 0;
+
+const upt =
+    totalTransactions > 0
+        ? totalQty / totalTransactions
+        : 0;
+
+        // ==========================
+// MONTH TO DATE
+// ==========================
+
+/*const mtdRows = parseCSV(monthToDateCSV);
+
+const mtdHeaders = mtdRows[0].map(h =>
+    h.replace(/"/g, "").trim()
+);
+
+const mtdSalesIndex =
+    mtdHeaders.indexOf("SALES_WITH_VAT_TOTAL");
+
+const mtdTotal = mtdRows.find(row =>
+    row.some(cell =>
+        cell.trim().toUpperCase() === "TOTAL"
+    )
+);
+
+let monthToDateSales = 0;
+
+if (mtdTotal) {
+
+    monthToDateSales =
+        parseFloat(mtdTotal[mtdSalesIndex]) || 0;
+
+}*/
+
+    // ==========================
+    // UPDATE DASHBOARD
+    // ==========================
+
     document.getElementById("totalSales").textContent =
-        "R " + totalSales.toLocaleString("en-ZA", {
+        "R " +
+        totalSales.toLocaleString("en-ZA", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
@@ -348,9 +429,45 @@ function updateDashboard(productCSV, cashierCSV) {
         totalTransactions.toLocaleString("en-ZA");
 
     document.getElementById("averageSale").textContent =
-        "R " + averageSale.toLocaleString("en-ZA", {
+        "R " +
+        averageSale.toLocaleString("en-ZA", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         });
+
+    document.getElementById("monthlyTarget").textContent =
+        "R " +
+        Number(monthlyTarget).toLocaleString("en-ZA", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+    document.getElementById("dailyTarget").textContent =
+        "R " +
+        Number(dailyTarget).toLocaleString("en-ZA", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
+        document.getElementById("varianceTarget").textContent =
+    (variance >= 0 ? "+" : "-") +
+    "R " +
+    Math.abs(variance).toLocaleString("en-ZA", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+document.getElementById("percentTarget").textContent =
+    percentToTarget.toFixed(2) + "%";
+
+document.getElementById("upt").textContent =
+    upt.toFixed(2);
+
+    document.getElementById("monthToDate").textContent =
+    "R " +
+    Number(monthToDateSales).toLocaleString("en-ZA", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
 
 }
