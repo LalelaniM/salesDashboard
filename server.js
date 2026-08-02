@@ -15,11 +15,10 @@ app.use(express.static("public"));
     verifyUser() code.
 ====================================================
 */
-const CLIENT_CODE = "538868";
-const USERNAME = "Gift";
-const PASSWORD = "Gift9663";
-
-const ERPLY_URL = `https://538868.erply.com/api/`;
+const CLIENT_CODE = process.env.CLIENT_CODE;
+const USERNAME = process.env.USERNAME;
+const PASSWORD = process.env.PASSWORD;
+const ERPLY_URL = process.env.ERPLY_URL;
 
 let sessionKey = null;
 let sessionExpiry = 0;

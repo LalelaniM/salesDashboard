@@ -1,3 +1,4 @@
+
 const todayDate = document.getElementById("todayDate");
 const showReportBtn = document.getElementById("showReportBtn");
 const loading = document.getElementById("loading");
