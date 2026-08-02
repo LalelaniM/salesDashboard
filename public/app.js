@@ -1,6 +1,8 @@
 
 const todayDate = document.getElementById("todayDate");
 const showReportBtn = document.getElementById("showReportBtn");
+const shareWhatsAppBtn =
+    document.getElementById("shareWhatsAppBtn");
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
 const reportContainer = document.getElementById("reportContainer");
@@ -16,7 +18,10 @@ todayDate.textContent = today.toLocaleDateString("en-ZA", {
 
 // Button click
 showReportBtn.addEventListener("click", loadReport);
-
+shareWhatsAppBtn.addEventListener(
+    "click",
+    shareWhatsApp
+);
 async function loadReport() {
 
     loading.classList.remove("hidden");
@@ -469,5 +474,68 @@ document.getElementById("upt").textContent =
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     });
+
+    
+
+}
+
+function shareWhatsApp() {
+
+    const date =
+        document.getElementById("todayDate").textContent;
+
+    const totalSales =
+        document.getElementById("totalSales").textContent;
+
+    const qtySold =
+        document.getElementById("totalQty").textContent;
+
+    const transactions =
+        document.getElementById("totalTransactions").textContent;
+
+    const averageSale =
+        document.getElementById("averageSale").textContent;
+
+    const upt =
+        document.getElementById("upt").textContent;
+
+    const dailyTarget =
+        document.getElementById("dailyTarget").textContent;
+
+    const variance =
+        document.getElementById("varianceTarget").textContent;
+
+    const percent =
+        document.getElementById("percentTarget").textContent;
+
+    const monthlyTarget =
+        document.getElementById("monthlyTarget").textContent;
+
+    const mtd =
+        document.getElementById("monthToDate").textContent;
+
+    const message =
+`📊 *Daily Sales Summary*
+
+📅 Date: ${date}
+
+💰 Total Sales: ${totalSales}
+🛒 Qty Sold: ${qtySold}
+🧾 Transactions: ${transactions}
+💵 Average Sale: ${averageSale}
+📦 UPT: ${upt}
+
+🎯 Daily Target: ${dailyTarget}
+📈 Variance: ${variance}
+✅ Target Achieved: ${percent}
+
+📆 Month To Date: ${mtd}
+🎯 Monthly Target: ${monthlyTarget}`;
+
+    const whatsappUrl =
+        "https://wa.me/?text=" +
+        encodeURIComponent(message);
+
+    window.open(whatsappUrl, "_blank");
 
 }
