@@ -18,134 +18,144 @@
 
 <div class="container">
 
-    <h1>Daily Sales Report</h1>
+    <h1>Daily Report</h1>
 
     <div class="date-box">
         <strong>Today's Date:</strong>
         <span id="todayDate"></span>
     </div>
+    <div class="toolbar">
 
-    <button id="showReportBtn">Show Report</button>
-    <button id="shareWhatsAppBtn">Share Summary</button>
+        <button id="showReportBtn">Show Report</button>
+        <button id="shareWhatsAppBtn">Share Summary</button>
+    </div>
 
     <div id="dashboard" class="dashboard hidden">
-        
-        <div class="card">
-            <h3>Total Sales</h3>
-            <span id="totalSales">R 0.00</span>
-        </div>
 
-        <div class="card">
-            <h3>Total Qty Sold</h3>
-            <span id="totalQty">0</span>
-        </div>
+            <div class="card">
 
-        <div class="card">
-            <h3>Transactions</h3>
-            <span id="totalTransactions">0</span>
-        </div>
+                    <h3>Daily Target Progress</h3>
 
-        <div class="card">
-            <h3>Average Sale</h3>
-            <span id="averageSale">R 0.00</span>
-        </div>
+                    <div class="progress-ring">
 
-        <div class="card">
-    <h3>Targets</h3>
+                        <svg width="170" height="170" viewBox="0 0 170 170">
 
-    <p>
-        Daily Target:
-        <strong id="dailyTarget">R 0.00</strong>
-    </p>
+                            <!-- Background ring -->
+                            <circle
+                                class="progress-bg"
+                                cx="85"
+                                cy="85"
+                                r="70">
+                            </circle>
 
-    <p>
-        Variance:
-        <strong id="varianceTarget">R 0.00</strong>
-    </p>
+                            <!-- Progress ring -->
+                            <circle
+                                id="progressCircle"
+                                class="progress-value"
+                                cx="85"
+                                cy="85"
+                                r="70">
+                            </circle>
 
-</div>
+                        </svg>
 
-        <div class="card">
-            <h3>UPT</h3>
-            <span id="upt">0.00</span>
-        </div>
+                        <!-- Percentage in the middle -->
+                        <div
+                            id="progressPercent"
+                            class="progress-number">
+                            0%
+                        </div>
+                    </div>
 
-        <div class="card">
+            </div>
+                
+            <div class="card">
 
-    <h3>Daily Target Progress</h3>
+                    <h3>Sales</h3>
 
-    <div class="progress-ring">
+                    <div class="metric-box">
+                        <h4>Sales</h4>
+                        <span id="totalSales">R 0.00</span>
+                    </div>
 
-        <svg width="170" height="170" viewBox="0 0 170 170">
+                    <div class="metric-box">
+                        <h4>Total Qty Sold</h4>
+                        <span id="totalQty">0</span>
+                    </div>
 
-            <!-- Background ring -->
-            <circle
-                class="progress-bg"
-                cx="85"
-                cy="85"
-                r="70">
-            </circle>
+                    <div class="metric-box">
+                        <h4>Transactions</h4>
+                        <span id="totalTransactions">0</span>
+                    </div>
 
-            <!-- Progress ring -->
-            <circle
-                id="progressCircle"
-                class="progress-value"
-                cx="85"
-                cy="85"
-                r="70">
-            </circle>
+                    <div class="metric-box">
+                        <h4>Average Sale</h4>
+                        <span id="averageSale">R 0.00</span>
+                    </div>
 
-        </svg>
+                    <div class="metric-box">
+                        <h4>Targets</h4>
 
-        <!-- Percentage in the middle -->
-        <div
-            id="progressPercent"
-            class="progress-number">
-            0%
-        </div>
+                        <p>
+                            Daily Target:
+                            <strong id="dailyTarget">R 0.00</strong>
+                        </p>
 
-    </div>
+                        <p>
+                            Variance:
+                            <strong id="varianceTarget">R 0.00</strong>
+                        </p>
+                    </div>
 
-</div>
-
-        <div class="card">
-
-            <h3>Month To Date</h3>
-
-            <div class="metric">
-                <div class="metric-label">Sales</div>
-                <div class="metric-value" id="monthToDate"></div>
+                    <div class="metric-box">
+                        <h4>UPT</h4>
+                        <span id="upt">0.00</span>
+                    </div>
             </div>
 
-            <div class="metric">
-                <div class="metric-label">MTD Target</div>
-                <div class="metric-value" id="mtdTarget"></div>
-            </div>
+            <div class="card">
 
-            <div class="metric">
-                <div class="metric-label">Monthly Target</div>
-                <div class="metric-value" id="monthlyTarget"></div>
-            </div>
+                    <h3>Month To Date</h3>
 
+                    <div class="metric-box">
+                        <h4>Sales</h4>
+                        <div class="metric-value" id="monthToDate">
+                            R 0.00
+                        </div>
+                    </div>
+
+                    <div class="metric-box">
+                        <h4>MTD Target</h4>
+                        <div class="metric-value" id="mtdTarget">
+                            R 0.00
+                        </div>
+                    </div>
+
+                    <div class="metric-box">
+                        <h4>Monthly Target</h4>
+                        <div class="metric-value" id="monthlyTarget">
+                            R 0.00
+                        </div>
+                    </div>
+
+            </div>
+        </div>
+
+
+    <div>
+        <div id="loading" class="loading hidden">
+            Compiling sales report...
+        </div>
+
+        <div id="error" class="error hidden"></div>
+
+        <div id="reportContainer">
+            <div class="placeholder">
+                Click <strong>Show Report</strong> to generate today's sales report.
+            </div>
         </div>
 
     </div>
-
-    </div>
-
-    <div id="loading" class="loading hidden">
-        Compiling sales report...
-    </div>
-
-    <div id="error" class="error hidden"></div>
-
-    <div id="reportContainer">
-
-        <div class="placeholder">
-            Click <strong>Show Report</strong> to generate today's sales report.
-        </div>
-    </div>
-
 </div>
 
 <script src="app.js"></script>

@@ -11,13 +11,11 @@ body {
 }
 
 .container {
-    width: 95%;
+    width: 100%;
     max-width: 1400px;
-    margin: 30px auto;
-    background: white;
-    padding: 25px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.15);
+    margin: 0 auto;
+    padding: 0 15px;
+    box-sizing: border-box;
 }
 
 h1 {
@@ -139,17 +137,28 @@ tbody tr:hover {
 
 }
 
-.dashboard{
+.dashboard {
+    display: grid;
 
-    display:grid;
+    grid-template-columns: repeat(3, 1fr);
 
-    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap: 20px;
 
-    gap:20px;
+    width: 90%;
+    max-width: 1200px;
 
-    margin:30px 0;
-
+    margin: 20px auto;
 }
+.dashboard .card {
+    width: 100%;
+    box-sizing: border-box;
+
+    border-radius: 10px;
+    padding: 20px;
+
+    text-align: center;
+}
+
 
 .card{
 
@@ -349,4 +358,132 @@ tbody tr:hover {
 .nested-table td {
     padding: 8px;
     text-align: left;
+}
+/* =================================
+   DASHBOARD METRIC BOXES
+================================= */
+
+.metric-box {
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+
+    padding: 12px 15px;
+    margin: 10px 0;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.03);
+
+    box-sizing: border-box;
+}
+
+.metric-box h4 {
+    margin: 0 0 6px 0;
+
+    font-size: 16px;
+    font-weight: 600;
+
+    color: white;
+}
+
+.metric-box span,
+.metric-box .metric-value {
+    display: block;
+
+    font-size: 28px;
+    font-weight: bold;
+
+    color: white;
+}
+
+.metric-box p {
+    margin: 5px 0;
+
+    color: white;
+    font-size: 14px;
+}
+
+.metric-box strong {
+    font-size: 15px;
+    color: white;
+}
+@media (max-width: 768px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+
+        width: 90%;
+
+        padding: 0;
+
+        gap: 15px;
+    }
+
+    .dashboard .card {
+        width: 100%;
+    }
+
+}
+@media (max-width: 480px) {
+
+    .dashboard {
+        width: 92%;
+        gap: 12px;
+    }
+
+    .dashboard .card {
+        padding: 15px;
+    }
+
+    .dashboard .metric-box {
+        margin: 8px 0;
+        padding: 10px;
+    }
+
+}
+.date-box {
+    text-align: center;
+    margin: 15px auto;
+}
+.toolbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    margin: 20px auto;
+    flex-wrap: wrap;
+}
+@media (max-width: 768px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+        width: 90%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+}
+#reportContainer {
+    width: 90%;
+    max-width: 1200px;
+
+    margin: 30px auto;
+
+    text-align: center;
+}
+
+.table-wrapper {
+    width: 100%;
+
+    margin: 20px auto;
+
+    overflow-x: auto;
+}
+.loading,
+.error,
+.placeholder {
+    text-align: center;
+
+    margin: 20px auto;
 }
