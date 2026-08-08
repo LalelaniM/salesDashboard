@@ -1,8 +1,7 @@
 
 const todayDate = document.getElementById("todayDate");
 const showReportBtn = document.getElementById("showReportBtn");
-const shareWhatsAppBtn =
-    document.getElementById("shareWhatsAppBtn");
+const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
 const reportContainer = document.getElementById("reportContainer");
@@ -10,62 +9,59 @@ const reportContainer = document.getElementById("reportContainer");
 // Display today's date
 const today = new Date();
 
-todayDate.textContent = today.toLocaleDateString("en-ZA", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-});
+todayDate.textContent = today.toLocaleDateString("en-ZA", {year: "numeric",month: "long",day: "numeric"});
 
 // Button click
 showReportBtn.addEventListener("click", loadReport);
-shareWhatsAppBtn.addEventListener(
-    "click",
-    shareWhatsApp
-);
+shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
+
 async function loadReport() {
 
     loading.classList.remove("hidden");
     error.classList.add("hidden");
-
     showReportBtn.disabled = true;
-
     reportContainer.innerHTML = "";
+    document.getElementById("dashboard").classList.add("hidden");
 
-    try {
-
+    try 
+    {
         const response = await fetch("/api/report");
 
-if (!response.ok) {
-    throw new Error("Unable to generate report.");
-}
+        if (!response.ok) 
+            {
+                throw new Error("Unable to generate report.");
+            }
 
-const reports = await response.json();
+        const reports = await response.json();
 
-buildReports(
-    reports.productReport,
-    reports.cashierReport
-);
+        document.getElementById("dashboard").classList.remove("hidden");
 
-updateDashboard(
-    reports.productReport,
-    reports.cashierReport,
-    reports.monthToDateSales,
-    reports.monthlyTarget,
-    reports.dailyTarget
-);
+        buildReports(
+            reports.productReport,
+            reports.cashierReport
+        );
+
+        updateDashboard(
+            reports.productReport,
+            reports.cashierReport,
+            reports.monthToDateSales,
+            reports.monthlyTarget,
+            reports.dailyTarget,
+            reports.mtdTarget
+
+        );
 
     }
-    catch (err) {
-
+    catch (err) 
+    {
+        document.getElementById("dashboard").classList.add("hidden");
         error.textContent = err.message;
         error.classList.remove("hidden");
-
     }
-    finally {
-
+    finally 
+    {
         loading.classList.add("hidden");
         showReportBtn.disabled = false;
-
     }
 
 }
@@ -81,77 +77,61 @@ updateDashboard(
 function parseCSV(text) {
 
     const rows = [];
-
     let row = [];
-
     let value = "";
-
     let inQuotes = false;
 
-    for (let i = 0; i < text.length; i++) {
+    for (let i = 0; i < text.length; i++) 
+        {
+            const c = text[i];
 
-        const c = text[i];
+            if (c === '"') 
+                {
+                    if (inQuotes && text[i + 1] === '"') 
+                        {
+                            value += '"';
+                            i++;
+                        }
+                    else 
+                        {
+                            inQuotes = !inQuotes;
+                        }
+                }
 
-        if (c === '"') {
+            else if (c === "," && !inQuotes) 
+                {
+                    row.push(value);
+                    value = "";
+                }
 
-            if (inQuotes && text[i + 1] === '"') {
+            else if ((c === "\n" || c === "\r") && !inQuotes) 
+                {
+                    if (value !== "" || row.length > 0) 
+                        {
+                            row.push(value);
+                            rows.push(row);
+                        }
+                    row = [];
+                    value = "";
 
-                value += '"';
+                if (c === "\r" && text[i + 1] === "\n") 
+                    {
+                        i++;
+                    }
+                }
 
-                i++;
-
-            }
             else {
 
-                inQuotes = !inQuotes;
+                value += c;
 
             }
-
         }
 
-        else if (c === "," && !inQuotes) {
-
+    if (value !== "" || row.length > 0) 
+        {
             row.push(value);
-
-            value = "";
-
+            rows.push(row);
         }
-
-        else if ((c === "\n" || c === "\r") && !inQuotes) {
-
-            if (value !== "" || row.length > 0) {
-
-                row.push(value);
-
-                rows.push(row);
-
-            }
-
-            row = [];
-
-            value = "";
-
-            if (c === "\r" && text[i + 1] === "\n") {
-                i++;
-            }
-
-        }
-
-        else {
-
-            value += c;
-
-        }
-
-    }
-
-    if (value !== "" || row.length > 0) {
-
-        row.push(value);
-
-        rows.push(row);
-
-    }
 
     return rows;
 
@@ -168,7 +148,6 @@ function buildReports(productCSV, cashierCSV) {
     reportContainer.innerHTML = "";
 
     reportContainer.appendChild(
-
         createTableSection(
             "Sales By Product",
             productCSV,
@@ -185,90 +164,107 @@ function buildReports(productCSV, cashierCSV) {
 
     );
 
-    reportContainer.appendChild(
-
+    /*reportContainer.appendChild(
         createTableSection(
             "Sales By Cashier",
             cashierCSV,
             [
-                "PRODUCT_ID",
-                "SERVICE_ID",
-                "EAN_CODE",
-                "UNIT",
-                "NET_SALES_TOTAL",
+                "EMPLOYEE_ID",
+                "AVERAGE_SALE",
+                "AVERAGE_BASKET",
                 "DISCOUNT_TOTAL",
-                "DISCOUNT_PERCENTAGE"
+                "DISCOUNT_PERCENTAGE",
+                "NET_SALES_TOTAL",
+                "VAT_TOTAL - ID:1 - 15%",
+                "VAT_RATE_ID:1 - 15%",
+                "VAT_RATE:1 - 15%",
+                "UNIT",
+                "EAN_CODE",
+                "PRODUCT_ID",
+                "AVERAGE_UNITS_PER_TRANSACTION",
+                "AVERAGE_VALUE_SOLD",
+                "LINE_NUMBER",
+                "SERVICE_ID"
             ]
         )
 
-    );
+    );*/
 
 }
+
+    const columnNames = {
+
+        "Sales By Product": {
+
+            "PRODUCT_NAME": "Product",
+            "SOLD_QUANTITY": "Qty",
+            "SALES_WITH_VAT_TOTAL": "Price"
+
+        },
+
+        "Sales By Cashier": {
+
+            "EMPLOYEE_NAME": "Cashier",
+            "NUMBER_OF_SALES": "Transactions",
+            "SOLD_QUANTITY": "Qty",
+            "SALES_WITH_VAT_TOTAL": "Sales",
+            "AVERAGE_SALE": "Avg Sale",
+            "AVERAGE_BASKET": "UPT"
+
+        }
+
+    };
 
 function createTableSection(title, csv, hiddenColumns) {
 
     const section = document.createElement("div");
-
     section.style.marginTop = "40px";
-
     const heading = document.createElement("h2");
-
     heading.textContent = title;
-
     heading.style.marginBottom = "15px";
-
     heading.style.color = "#0066cc";
-
     section.appendChild(heading);
-
     const rows = parseCSV(csv);
-
-    if (rows.length === 0) {
-
-        section.innerHTML += "<p>No data available.</p>";
-
-        return section;
-
-    }
+    if (rows.length === 0) 
+        {
+            section.innerHTML += "<p>No data available.</p>";
+            return section;
+        }
 
     const headers = rows[0];
-
     const data = rows.slice(1);
-
-    const visibleColumns = headers
-        .map((header, index) => ({
-            header: header.replace(/"/g, "").trim(),
-            index
-        }))
-        .filter(col => !hiddenColumns.includes(col.header));
+    const visibleColumns = headers.map((header, index) => ({header: header.replace(/"/g, "").trim(),index})).filter(col => !hiddenColumns.includes(col.header));
 
     let html = '<div class="table-wrapper">';
-
     html += "<table>";
-
     html += "<thead><tr>";
 
     visibleColumns.forEach(col => {
 
-        html += `<th>${col.header}</th>`;
+    let header = col.header;
 
+    if (columnNames[title]?.[header]) {
+
+        header = columnNames[title][header];
+
+    }
+    html += `<th>${header}</th>`;
     });
 
     html += "</tr></thead>";
-
     html += "<tbody>";
 
     data.forEach(row => {
-        if (row.some(cell => cell.trim().toUpperCase() === "TOTAL")) {
-    return;
-}
+        if (row.some(cell => cell.trim().toUpperCase() === "TOTAL")) 
+            {
+                return;
+            }
 
         if (row.length === 1 && row[0] === "") return;
 
         html += "<tr>";
 
         visibleColumns.forEach(col => {
-
             const value = row[col.index] || "";
 
             html += `<td>${value.replace(/"/g, "")}</td>`;
@@ -296,8 +292,10 @@ function updateDashboard(
     cashierCSV,
     monthToDateSales,
     monthlyTarget,
-    dailyTarget
-) {
+    dailyTarget,
+    mtdTarget
+    ) 
+    {
 
     const dashboard = document.getElementById("dashboard");
     dashboard.classList.remove("hidden");
@@ -310,34 +308,21 @@ function updateDashboard(
 
     if (productRows.length < 2) return;
 
-    const productHeaders = productRows[0].map(h =>
-        h.replace(/"/g, "").trim()
-    );
+    const productHeaders = productRows[0].map(h =>h.replace(/"/g, "").trim());
 
-    const qtyIndex =
-        productHeaders.indexOf("SOLD_QUANTITY");
+    const qtyIndex = productHeaders.indexOf("SOLD_QUANTITY");
+    const salesIndex = productHeaders.indexOf("SALES_WITH_VAT_TOTAL");
 
-    const salesIndex =
-        productHeaders.indexOf("SALES_WITH_VAT_TOTAL");
-
-    const productTotal = productRows.find(row =>
-        row.some(cell =>
-            cell.trim().toUpperCase() === "TOTAL"
-        )
-    );
+    const productTotal = productRows.find(row =>row.some(cell =>cell.trim().toUpperCase() === "TOTAL"));
 
     let totalSales = 0;
     let totalQty = 0;
 
-    if (productTotal) {
-
-        totalSales =
-            parseFloat(productTotal[salesIndex]) || 0;
-
-        totalQty =
-            parseFloat(productTotal[qtyIndex]) || 0;
-
-    }
+    if (productTotal) 
+        {
+            totalSales = parseFloat(productTotal[salesIndex]) || 0;
+        totalQty = parseFloat(productTotal[qtyIndex]) || 0;
+        }
 
     // ==========================
     // CASHIER REPORT
@@ -345,87 +330,45 @@ function updateDashboard(
 
     const cashierRows = parseCSV(cashierCSV);
 
-    const cashierHeaders = cashierRows[0].map(h =>
-        h.replace(/"/g, "").trim()
-    );
+    const cashierHeaders = cashierRows[0].map(h =>h.replace(/"/g, "").trim());
 
-    const transactionIndex =
-        cashierHeaders.indexOf("NUMBER_OF_SALES");
+    const transactionIndex = cashierHeaders.indexOf("NUMBER_OF_SALES");
 
-    const cashierTotal = cashierRows.find(row =>
-        row.some(cell =>
-            cell.trim().toUpperCase() === "TOTAL"
-        )
-    );
+    const cashierTotal = cashierRows.find(row =>row.some(cell =>cell.trim().toUpperCase() === "TOTAL"));
 
     let totalTransactions = 0;
 
-    if (cashierTotal) {
-
-        totalTransactions =
-            parseFloat(cashierTotal[transactionIndex]) || 0;
-
-    }
+    if (cashierTotal) 
+        {
+            totalTransactions = parseFloat(cashierTotal[transactionIndex]) || 0;
+        }
 
     // ==========================
     // CALCULATIONS
     // ==========================
 
-    const averageSale =
-        totalTransactions > 0
-            ? totalSales / totalTransactions
-            : 0;
+    const averageSale = totalTransactions > 0 ? totalSales / totalTransactions : 0;
+    const variance = totalSales - Number(dailyTarget);
 
-            const variance = totalSales - Number(dailyTarget);
+    const percentToTarget = Number(dailyTarget) > 0 ? (totalSales / Number(dailyTarget)) * 100 : 0;
 
-const percentToTarget =
-    Number(dailyTarget) > 0
-        ? (totalSales / Number(dailyTarget)) * 100
+    const upt = totalTransactions > 0 ? totalQty / totalTransactions : 0;
+
+    const mtdProgress =
+    mtdTarget > 0
+        ? (monthToDateSales / mtdTarget) * 100
         : 0;
 
-const upt =
-    totalTransactions > 0
-        ? totalQty / totalTransactions
+    const monthlyProgress =
+    Number(monthlyTarget) > 0
+        ? (monthToDateSales / Number(monthlyTarget)) * 100
         : 0;
-
-        // ==========================
-// MONTH TO DATE
-// ==========================
-
-/*const mtdRows = parseCSV(monthToDateCSV);
-
-const mtdHeaders = mtdRows[0].map(h =>
-    h.replace(/"/g, "").trim()
-);
-
-const mtdSalesIndex =
-    mtdHeaders.indexOf("SALES_WITH_VAT_TOTAL");
-
-const mtdTotal = mtdRows.find(row =>
-    row.some(cell =>
-        cell.trim().toUpperCase() === "TOTAL"
-    )
-);
-
-let monthToDateSales = 0;
-
-if (mtdTotal) {
-
-    monthToDateSales =
-        parseFloat(mtdTotal[mtdSalesIndex]) || 0;
-
-}*/
 
     // ==========================
     // UPDATE DASHBOARD
     // ==========================
 
-    document.getElementById("totalSales").textContent =
-        "R " +
-        totalSales.toLocaleString("en-ZA", {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+    document.getElementById("totalSales").textContent ="R " + totalSales.toLocaleString("en-ZA", {minimumFractionDigits: 2,maximumFractionDigits: 2});
 
     document.getElementById("totalQty").textContent =
         totalQty.toLocaleString("en-ZA");
@@ -462,11 +405,10 @@ if (mtdTotal) {
         maximumFractionDigits: 2
     });
 
-document.getElementById("percentTarget").textContent =
-    percentToTarget.toFixed(2) + "%";
 
-document.getElementById("upt").textContent =
-    upt.toFixed(2);
+
+    document.getElementById("upt").textContent =
+        upt.toFixed(2);
 
     document.getElementById("monthToDate").textContent =
     "R " +
@@ -475,9 +417,44 @@ document.getElementById("upt").textContent =
         maximumFractionDigits: 2
     });
 
-    
+    document.getElementById("mtdTarget").textContent =
+    "R " +
+    Number(mtdTarget).toLocaleString("en-ZA", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+        });
 
+        const circle = document.getElementById("progressCircle");
+        const percentText = document.getElementById("progressPercent");
+
+        const radius = 70;
+        const circumference = 2 * Math.PI * radius;
+
+        // Actual percentage (can exceed 100)
+        const actualPercent = percentToTarget;
+
+        // Ring fill is capped at 100%
+        const ringPercent = Math.min(actualPercent, 100);
+
+        const offset = circumference - (ringPercent / 100) * circumference;
+
+        circle.style.strokeDasharray = circumference;
+        circle.style.strokeDashoffset = offset;
+
+        // Display the real percentage
+        percentText.textContent = actualPercent.toFixed(0) + "%";
+
+        // Change colour when target exceeded
+        if (actualPercent >= 100) {
+            circle.style.stroke = "#22c55e";      // Green
+        } else if (actualPercent >= 80) {
+            circle.style.stroke = "#f59e0b";      // Orange
+        } else {
+            circle.style.stroke = "#3b82f6";      // Blue
+        }
+        
 }
+
 
 function shareWhatsApp() {
 
@@ -506,7 +483,7 @@ function shareWhatsApp() {
         document.getElementById("varianceTarget").textContent;
 
     const percent =
-        document.getElementById("percentTarget").textContent;
+    document.getElementById("progressPercent").textContent;
 
     const monthlyTarget =
         document.getElementById("monthlyTarget").textContent;
@@ -515,27 +492,28 @@ function shareWhatsApp() {
         document.getElementById("monthToDate").textContent;
 
     const message =
-`📊 *Daily Sales Summary*
+    `📊 *Daily Sales Summary*
 
-📅 Date: ${date}
+    📅 Date: ${date}
 
-💰 Total Sales: ${totalSales}
-🛒 Qty Sold: ${qtySold}
-🧾 Transactions: ${transactions}
-💵 Average Sale: ${averageSale}
-📦 UPT: ${upt}
+    💰 Total Sales: ${totalSales}
+    🛒 Qty Sold: ${qtySold}
+    🧾 Transactions: ${transactions}
+    💵 Average Sale: ${averageSale}
+    📦 UPT: ${upt}
 
-🎯 Daily Target: ${dailyTarget}
-📈 Variance: ${variance}
-✅ Target Achieved: ${percent}
+    🎯 Daily Target: ${dailyTarget}
+    📈 Variance: ${variance}
+    ✅ Target Achieved: ${percent}
 
-📆 Month To Date: ${mtd}
-🎯 Monthly Target: ${monthlyTarget}`;
+    📆 Month To Date: ${mtd}
+    🎯 Monthly Target: ${monthlyTarget}`;
 
-    const whatsappUrl =
-        "https://wa.me/?text=" +
-        encodeURIComponent(message);
-
+    const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(message);
     window.open(whatsappUrl, "_blank");
+
+    
+
+    
 
 }
