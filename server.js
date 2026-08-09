@@ -23,10 +23,7 @@ const ERPLY_URL = process.env.ERPLY_URL;*/
 const CLIENT_CODE = "538868";
 const USERNAME = "Gift";
 const PASSWORD = "Gift9663";
-
-const ERPLY_URL =
-  `https://538868.erply.com/api/`;
-
+const ERPLY_URL =`https://538868.erply.com/api/`;
 
 let sessionKey = null;
 let sessionExpiry = 0;
@@ -56,14 +53,14 @@ async function verifyUser() {
 
         if (!data.status || data.status.responseStatus !== "ok")
             {
-               throw new Error("ERPLY Login Failed");
+               throw new Error("Login Failed");
             }
 
         sessionKey = data.records[0].sessionKey;
 
         // Cache for 55 minutes
         sessionExpiry = Date.now() + (55 * 60 * 1000);
-        console.log("ERPLY Login Successful");
+        console.log("Login Successful");
 
         return sessionKey;
     }
@@ -263,14 +260,14 @@ function getTargets() {
     if (day === today) {
         dailyTarget = target;
     }
-}
+    }
    
 
     return {
-            monthlyTarget,
-            dailyTarget,
-            mtdTarget
-        };
+        monthlyTarget,
+        dailyTarget,
+        mtdTarget
+    };
 
 }
 /*
@@ -325,7 +322,7 @@ app.listen(PORT, () => {
 
     console.log("--------------------------------");
 
-    console.log("ERPLY Sales Report");
+    console.log("Sales Report");
 
     console.log(`http://localhost:${PORT}`);
 

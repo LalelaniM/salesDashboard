@@ -11,32 +11,46 @@
     <title>Daily Sales Report</title>
 
     <link rel="stylesheet" href="style.css">
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 </head>
 
 <body>
 
 <div class="container">
-
+    
     <h1>Daily Report</h1>
 
     <div class="date-box">
         <strong>Today's Date:</strong>
         <span id="todayDate"></span>
     </div>
+
     <div class="toolbar">
-
         <button id="showReportBtn">Show Report</button>
-        <button id="shareWhatsAppBtn">Share Summary</button>
-    </div>
 
+        <button id="shareWhatsAppBtn">
+            <i class="fa-brands fa-whatsapp"></i>
+                Share
+        </button>
+    </div>
+    
     <div id="dashboard" class="dashboard hidden">
 
-            <div class="card">
+        <div class="card">
 
-                    <h3>Daily Target Progress</h3>
+            <h2>Progress</h2>
 
-                    <div class="progress-ring">
+            <br>
+            <p>
+                Daily Target:<strong id="dailyTarget">R 0.00</strong>
+            </p>
+
+
+
+            <div class="progress-ring">
 
                         <svg width="170" height="170" viewBox="0 0 170 170">
 
@@ -65,82 +79,88 @@
                             class="progress-number">
                             0%
                         </div>
-                    </div>
-
             </div>
+
+            <div class="metric-box">
+                <h4>Today's Sales</h4>
+                <span id="totalSales">R 0.00</span>
+            </div>
+            
+        </div>
                 
-            <div class="card">
+        <div class="card daily-figures-card">
 
-                    <h3>Sales</h3>
+            <h2>Daily Figures</h2>
 
-                    <div class="metric-box">
-                        <h4>Sales</h4>
-                        <span id="totalSales">R 0.00</span>
-                    </div>
+            <div class="daily-metrics-row">
 
-                    <div class="metric-box">
-                        <h4>Total Qty Sold</h4>
-                        <span id="totalQty">0</span>
-                    </div>
+                <div class="metric-box small-metric">
+                    <h4>Qty Sold</h4>
+                    <span id="totalQty">0</span>
+                </div>
 
-                    <div class="metric-box">
-                        <h4>Transactions</h4>
-                        <span id="totalTransactions">0</span>
-                    </div>
+                <div class="metric-box small-metric">
+                    <h4>Transactions</h4>
+                    <span id="totalTransactions">0</span>
+                </div>
 
-                    <div class="metric-box">
-                        <h4>Average Sale</h4>
-                        <span id="averageSale">R 0.00</span>
-                    </div>
-
-                    <div class="metric-box">
-                        <h4>Targets</h4>
-
-                        <p>
-                            Daily Target:
-                            <strong id="dailyTarget">R 0.00</strong>
-                        </p>
-
-                        <p>
-                            Variance:
-                            <strong id="varianceTarget">R 0.00</strong>
-                        </p>
-                    </div>
-
-                    <div class="metric-box">
-                        <h4>UPT</h4>
-                        <span id="upt">0.00</span>
-                    </div>
-            </div>
-
-            <div class="card">
-
-                    <h3>Month To Date</h3>
-
-                    <div class="metric-box">
-                        <h4>Sales</h4>
-                        <div class="metric-value" id="monthToDate">
-                            R 0.00
-                        </div>
-                    </div>
-
-                    <div class="metric-box">
-                        <h4>MTD Target</h4>
-                        <div class="metric-value" id="mtdTarget">
-                            R 0.00
-                        </div>
-                    </div>
-
-                    <div class="metric-box">
-                        <h4>Monthly Target</h4>
-                        <div class="metric-value" id="monthlyTarget">
-                            R 0.00
-                        </div>
-                    </div>
+                <div class="metric-box small-metric">
+                    <h4>UPT</h4>
+                    <span id="upt">0.00</span>
+                </div>
 
             </div>
+
+            <div class="metric-box">
+                <h4>Average Sale</h4>
+                <span id="averageSale">R 0.00</span>
+            </div>
+
+            <div class="metric-box">
+
+                <p>
+                    Variance From Target:
+                    <strong id="varianceTarget">R 0.00</strong>
+                </p>
+            </div>
+
+            
+
         </div>
 
+        <div class="card">
+
+            <h2>Month To Date</h2><br>
+
+            <div class="metric-box">
+                <h4>Monthly Sales</h4>
+                <div class="metric-value" id="monthToDate">
+                    R 0.00
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <h4>MTD Target</h4>
+                <div class="metric-value" id="mtdTarget">
+                    R 0.00
+                </div>
+            </div>
+
+            <div class="metric-box">
+                <h4>Monthly Target</h4>
+                <div class="metric-value" id="monthlyTarget">
+                    R 0.00
+                </div>
+            </div>
+
+            <div class="metric-box projection-box">
+                <p>
+                    Monthly Projection :
+                    <strong id="salesProjection">R 0.00</strong>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <div>
         <div id="loading" class="loading hidden">
@@ -154,7 +174,6 @@
                 Click <strong>Show Report</strong> to generate today's sales report.
             </div>
         </div>
-
     </div>
 </div>
 

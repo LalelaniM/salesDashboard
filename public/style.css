@@ -16,6 +16,7 @@ body {
     margin: 0 auto;
     padding: 0 15px;
     box-sizing: border-box;
+    padding-top: 30px;
 }
 
 h1 {
@@ -148,6 +149,7 @@ tbody tr:hover {
     max-width: 1200px;
 
     margin: 20px auto;
+    /*align-items: start;*/
 }
 .dashboard .card {
     width: 100%;
@@ -157,6 +159,7 @@ tbody tr:hover {
     padding: 20px;
 
     text-align: center;
+    
 }
 
 
@@ -166,7 +169,7 @@ tbody tr:hover {
 
     color:white;
 
-    padding:20px;
+    padding:10px;
 
     border-radius:10px;
 
@@ -174,6 +177,15 @@ tbody tr:hover {
 
     box-shadow:0 4px 10px rgba(0,0,0,.15);
 
+    height: auto;
+    box-sizing: border-box;
+
+    
+}
+.daily-figures-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .card h3{
@@ -364,10 +376,10 @@ tbody tr:hover {
 ================================= */
 
 .metric-box {
-    border: 2px solid rgba(255, 255, 255, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.2);
     border-radius: 10px;
 
-    padding: 12px 15px;
+    padding: 8px 10px;
     margin: 10px 0;
 
     text-align: center;
@@ -486,4 +498,47 @@ tbody tr:hover {
     text-align: center;
 
     margin: 20px auto;
+}
+.daily-metrics-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.small-metric {
+    width: 100px;
+    margin: 0;
+    padding: 10px 5px;
+    box-sizing: border-box;
+}
+
+.small-metric h4 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.small-metric span {
+    font-size: 24px;
+    font-weight: bold;
+}
+@media (max-width: 450px) {
+
+    .daily-metrics-row {
+        gap: 6px;
+    }
+
+    .small-metric {
+        padding: 8px 3px;
+    }
+
+    .small-metric h4 {
+        font-size: 12px;
+    }
+
+    .small-metric span {
+        font-size: 21px;
+    }
+
 }

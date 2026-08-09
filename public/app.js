@@ -152,6 +152,7 @@ function buildReports(productCSV, cashierCSV) {
             "Sales By Product",
             productCSV,
             [
+                "LINE_NUMBER",
                 "PRODUCT_ID",
                 "SERVICE_ID",
                 "EAN_CODE",
@@ -417,6 +418,32 @@ function updateDashboard(
         maximumFractionDigits: 2
     });
 
+    // ==========================
+    // MONTHLY SALES PROJECTION
+    // ==========================
+
+    const currentDate = new Date();
+
+    const currentDay = currentDate.getDate();
+
+    const daysInMonth = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        0
+    ).getDate();
+
+    const salesProjection =
+        currentDay > 0
+            ? (Number(monthToDateSales) / currentDay) * daysInMonth
+            : 0;
+
+    document.getElementById("salesProjection").textContent =
+        "R " +
+        salesProjection.toLocaleString("en-ZA", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+
     document.getElementById("mtdTarget").textContent =
     "R " +
     Number(mtdTarget).toLocaleString("en-ZA", {
@@ -458,23 +485,25 @@ function updateDashboard(
 
 function shareWhatsApp() {
 
-    const date =
-        document.getElementById("todayDate").textContent;
+    // Ask for foot traffic
+    const footTrafficInput = prompt("Please enter Foot Traffic:");
 
+    // Cancel pressed
+    if (footTrafficInput === null) {
+        return;
+    }
+
+    const footTraffic = Number(footTrafficInput);
+
+    // Validate input
+    if (!Number.isFinite(footTraffic) || footTraffic <= 0) {
+        alert("Please enter a valid Foot Traffic number.");
+        return;
+    }
+
+    // Get dashboard values
     const totalSales =
         document.getElementById("totalSales").textContent;
-
-    const qtySold =
-        document.getElementById("totalQty").textContent;
-
-    const transactions =
-        document.getElementById("totalTransactions").textContent;
-
-    const averageSale =
-        document.getElementById("averageSale").textContent;
-
-    const upt =
-        document.getElementById("upt").textContent;
 
     const dailyTarget =
         document.getElementById("dailyTarget").textContent;
@@ -482,16 +511,50 @@ function shareWhatsApp() {
     const variance =
         document.getElementById("varianceTarget").textContent;
 
-    const percent =
-    document.getElementById("progressPercent").textContent;
+    const totalTransactions =
+        document.getElementById("totalTransactions").textContent;
+
+    const totalQty =
+        document.getElementById("totalQty").textContent;
+
+    const averageSale =
+        document.getElementById("averageSale").textContent;
+
+    const upt =
+        document.getElementById("upt").textContent;
 
     const monthlyTarget =
         document.getElementById("monthlyTarget").textContent;
 
-    const mtd =
+    const monthToDate =
         document.getElementById("monthToDate").textContent;
 
-    const message =
+    const mtdTarget =
+        document.getElementById("mtdTarget").textContent;
+
+    const salesProjection =
+        document.getElementById("salesProjection").textContent;
+
+    // Convert transactions to a number
+    const transactionsNumber =
+        Number(
+            totalTransactions
+                .replace(/[^0-9.-]+/g, "")
+        );
+
+    // Calculate conversion
+    const conversion =
+        footTraffic > 0
+            ? (transactionsNumber / footTraffic) * 100
+            : 0;
+
+    // Current date
+    const date =
+        document.getElementById("todayDate").textContent;
+
+    // Build WhatsApp message
+
+    /*const message =
     `📊 *Daily Sales Summary*
 
     📅 Date: ${date}
@@ -507,13 +570,54 @@ function shareWhatsApp() {
     ✅ Target Achieved: ${percent}
 
     📆 Month To Date: ${mtd}
-    🎯 Monthly Target: ${monthlyTarget}`;
+    🎯 Monthly Target: ${monthlyTarget}`;*/
+    const message =
+    `Good Evening Team
 
-    const whatsappUrl = "https://wa.me/?text=" + encodeURIComponent(message);
+    Please see below our closing sales update.
+
+    ${date}
+
+    Figures 
+
+    Monthly Target- ${monthlyTarget}
+
+    Actual: ${totalSales}
+    Target: ${dailyTarget}
+    Var to Target: ${variance}
+    Percentage To Target: ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[^0-9.-]+/g, "")) > 0
+        ? (
+            Number(totalSales.replace(/[^0-9.-]+/g, "")) /
+            Number(dailyTarget.replace(/[^0-9.-]+/g, ""))
+        ) * 100
+        : 0
+    ).toFixed(2)}%
+    ################
+    Trans: ${totalTransactions}
+    Units Sold: ${totalQty}
+    Foot Traffic: ${footTraffic}(EST)
+    Conversion: ${conversion.toFixed(1)}%
+    AVT: ${averageSale}
+    UPT: ${upt}
+    ################
+
+    MTD: ${monthToDate}
+    MTD Target: ${mtdTarget}
+    Percentage to Target: ${
+        Number(monthlyTarget.replace(/[^0-9.-]+/g, "")) > 0
+            ? (
+                Number(monthToDate.replace(/[^0-9.-]+/g, "")) /
+                Number(monthlyTarget.replace(/[^0-9.-]+/g, ""))
+            ) * 100
+            : 0
+    }%
+    Projections: ${salesProjection}
+    ################`;
+
+    // Open WhatsApp
+    const whatsappUrl =
+        "https://wa.me/?text=" +
+        encodeURIComponent(message);
+
     window.open(whatsappUrl, "_blank");
-
-    
-
-    
-
 }
