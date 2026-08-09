@@ -260,8 +260,38 @@ tbody tr:hover {
 .progress-card{
     text-align:center;
 }
+.progress-ring {
+    position: relative;
+    width: 170px;
+    height: 170px;
+}
 
-.progress-ring{
+.progress-ring svg {
+    transform: rotate(-90deg);
+}
+
+.progress-bg {
+    fill: none;
+    stroke: #e5e7eb;
+    stroke-width: 12;
+}
+
+.progress-value {
+    fill: none;
+    stroke-width: 12;
+    stroke-linecap: round;
+}
+
+.progress-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 32px;
+    font-weight: bold;
+}
+/*.progress-ring{
     position:relative;
     width:170px;
     height:170px;
@@ -308,7 +338,7 @@ tbody tr:hover {
     font-size: 2.2rem;
     font-weight: 700;
     text-shadow: 0 2px 6px rgba(0,0,0,.35);
-}
+}*/
 /* ==============================
    TRANSFER TABLE CONTAINER
    ============================== */
@@ -595,4 +625,47 @@ tbody tr:hover {
 
 .hidden {
     display: none;
+}
+/* Daily Target Progress card */
+.progress-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+}
+
+/* Keep the ring centered */
+.progress-ring {
+    position: relative;
+    width: 170px;
+    height: 170px;
+    margin: 0 auto;
+}
+
+/* SVG stays centered */
+.progress-ring svg {
+    display: block;
+    margin: 0 auto;
+}
+
+/* Percentage stays in the middle */
+.progress-number {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    text-align: center;
+}
+.progress-card h3 {
+    text-align: center;
+    width: 100%;
+}
+
+.progress-card .progress-ring {
+    margin-left: auto;
+    margin-right: auto;
 }

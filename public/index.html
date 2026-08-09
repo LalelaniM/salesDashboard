@@ -57,53 +57,45 @@
     
     <div id="dashboard" class="dashboard hidden">
 
-        <div class="card">
+        <div class="card progress-card">
 
-            <h2>Progress</h2>
+            <h2>Daily Progress</h2><br>
+            
+            <div class="progress-ring">
 
+                <svg width="170" height="170" viewBox="0 0 170 170">
+
+                    <circle
+                        class="progress-bg"
+                        cx="85"
+                        cy="85"
+                        r="70">
+                    </circle>
+
+                    <circle
+                        id="progressCircle"
+                        class="progress-value"
+                        cx="85"
+                        cy="85"
+                        r="70">
+                    </circle>
+
+                </svg>
+
+                <div id="progressPercent" class="progress-number">
+                    0%
+                </div>
+            </div>
             <br>
             <p>
                 Daily Target:<strong id="dailyTarget">R 0.00</strong>
             </p>
-
-
-
-            <div class="progress-ring">
-
-                        <svg width="170" height="170" viewBox="0 0 170 170">
-
-                            <!-- Background ring -->
-                            <circle
-                                class="progress-bg"
-                                cx="85"
-                                cy="85"
-                                r="70">
-                            </circle>
-
-                            <!-- Progress ring -->
-                            <circle
-                                id="progressCircle"
-                                class="progress-value"
-                                cx="85"
-                                cy="85"
-                                r="70">
-                            </circle>
-
-                        </svg>
-
-                        <!-- Percentage in the middle -->
-                        <div
-                            id="progressPercent"
-                            class="progress-number">
-                            0%
-                        </div>
-            </div>
-
-            <div class="metric-box">
+            <br>
+            <div class="metric-box">    
                 <h4>Today's Sales</h4>
                 <span id="totalSales">R 0.00</span>
             </div>
-            
+
         </div>
                 
         <div class="card daily-figures-card">

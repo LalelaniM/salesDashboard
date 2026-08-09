@@ -480,33 +480,97 @@ function updateDashboard(
         });
 
         const circle = document.getElementById("progressCircle");
-        const percentText = document.getElementById("progressPercent");
+const percentText = document.getElementById("progressPercent");
 
-        const radius = 70;
-        const circumference = 2 * Math.PI * radius;
+const radius = 70;
+const circumference = 2 * Math.PI * radius;
 
-        // Actual percentage (can exceed 100)
-        const actualPercent = percentToTarget;
+circle.style.strokeDasharray = circumference;
 
-        // Ring fill is capped at 100%
-        const ringPercent = Math.min(actualPercent, 100);
+// Start empty
+circle.style.strokeDashoffset = circumference;
 
-        const offset = circumference - (ringPercent / 100) * circumference;
+const actualPercent = percentToTarget;
 
-        circle.style.strokeDasharray = circumference;
-        circle.style.strokeDashoffset = offset;
+// Ring itself stops at 100%
+const ringPercent = Math.min(actualPercent, 100);
 
-        // Display the real percentage
-        percentText.textContent = actualPercent.toFixed(0) + "%";
+const targetOffset =
+    circumference -
+    (ringPercent / 100) * circumference;
+
+// Animate from 0 to the target
+let startTime = null;
+const animationDuration = 1500; // 1.5 seconds
+
+function animateProgress(timestamp) {
+
+    if (!startTime) {
+        startTime = timestamp;
+    }
+
+    const elapsed = timestamp - startTime;
+
+    const progress =
+        Math.min(elapsed / animationDuration, 1);
+
+    // Smooth animation
+    const easedProgress =
+        1 - Math.pow(1 - progress, 3);
+
+    const currentPercent =
+        ringPercent * easedProgress;
+
+    const currentOffset =
+        circumference -
+        (currentPercent / 100) * circumference;
+
+    circle.style.strokeDashoffset = currentOffset;
+
+    // Percentage number counts up
+    percentText.textContent =
+        Math.round(actualPercent * easedProgress) + "%";
+
+    if (progress < 1) {
+
+        requestAnimationFrame(animateProgress);
+
+    } else {
+
+        // Make sure final value is exact
+        circle.style.strokeDashoffset = targetOffset;
+
+        percentText.textContent =
+            Math.round(actualPercent) + "%";
+    }
+}
+
+requestAnimationFrame(animateProgress);
+
+
+// Change colour based on actual percentage
+if (actualPercent >= 100) {
+
+    circle.style.stroke = "#22c55e";
+
+} else if (actualPercent >= 80) {
+
+    circle.style.stroke = "#f59e0b";
+
+} else {
+
+    circle.style.stroke = "#3b82f6";
+
+}
 
         // Change colour when target exceeded
-        if (actualPercent >= 100) {
+        /*if (actualPercent >= 100) {
             circle.style.stroke = "#22c55e";      // Green
         } else if (actualPercent >= 80) {
             circle.style.stroke = "#f59e0b";      // Orange
         } else {
             circle.style.stroke = "#3b82f6";      // Blue
-        }
+        }*/
         
 }
 
