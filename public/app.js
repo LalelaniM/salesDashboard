@@ -572,47 +572,47 @@ function shareWhatsApp() {
     📆 Month To Date: ${mtd}
     🎯 Monthly Target: ${monthlyTarget}`;*/
     const message =
-    `Good Evening Team
+`Good Evening Team
 
-    Please see below our closing sales update.
+Please see below our closing sales update.
 
-    ${date}
+${date}
 
-    Figures 
+Figures 
 
-    Monthly Target- ${monthlyTarget}
+Monthly Target- ${monthlyTarget}
 
-    Actual: ${totalSales}
-    Target: ${dailyTarget}
-    Var to Target: ${variance}
-    Percentage To Target: ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[^0-9.-]+/g, "")) > 0
+Actual: ${totalSales}
+Target: ${dailyTarget}
+Var to Target: ${variance}
+Percentage To Target: ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[^0-9.-]+/g, "")) > 0
+    ? (
+        Number(totalSales.replace(/[^0-9.-]+/g, "")) /
+        Number(dailyTarget.replace(/[^0-9.-]+/g, ""))
+    ) * 100
+    : 0
+).toFixed(2)}%
+################
+Trans: ${totalTransactions}
+Units Sold: ${totalQty}
+Foot Traffic: ${footTraffic}(EST)
+Conversion: ${conversion.toFixed(1)}%
+AVT: ${averageSale}
+UPT: ${upt}
+################
+
+MTD: ${monthToDate}
+MTD Target: ${mtdTarget}
+Percentage to Target: ${(
+    Number(monthlyTarget.replace(/[^0-9.-]+/g, "")) > 0
         ? (
-            Number(totalSales.replace(/[^0-9.-]+/g, "")) /
-            Number(dailyTarget.replace(/[^0-9.-]+/g, ""))
+            Number(monthToDate.replace(/[^0-9.-]+/g, "")) /
+            Number(monthlyTarget.replace(/[^0-9.-]+/g, ""))
         ) * 100
         : 0
-    ).toFixed(2)}%
-    ################
-    Trans: ${totalTransactions}
-    Units Sold: ${totalQty}
-    Foot Traffic: ${footTraffic}(EST)
-    Conversion: ${conversion.toFixed(1)}%
-    AVT: ${averageSale}
-    UPT: ${upt}
-    ################
-
-    MTD: ${monthToDate}
-    MTD Target: ${mtdTarget}
-    Percentage to Target: ${
-        Number(monthlyTarget.replace(/[^0-9.-]+/g, "")) > 0
-            ? (
-                Number(monthToDate.replace(/[^0-9.-]+/g, "")) /
-                Number(monthlyTarget.replace(/[^0-9.-]+/g, ""))
-            ) * 100
-            : 0
-    }%
-    Projections: ${salesProjection}
-    ################`;
+).toFixed(2)}%
+Projections: ${salesProjection}
+################`;
 
     // Open WhatsApp
     const whatsappUrl =
