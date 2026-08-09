@@ -2,6 +2,15 @@
 const todayDate = document.getElementById("todayDate");
 const showReportBtn = document.getElementById("showReportBtn");
 const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
+const shareMenu =
+    document.getElementById("shareMenu");
+
+const dailySummaryBtn =
+    document.getElementById("dailySummaryBtn");
+
+const closingFiguresBtn =
+    document.getElementById("closingFiguresBtn");
+
 const loading = document.getElementById("loading");
 const error = document.getElementById("error");
 const reportContainer = document.getElementById("reportContainer");
@@ -13,7 +22,26 @@ todayDate.textContent = today.toLocaleDateString("en-ZA", {year: "numeric",month
 
 // Button click
 showReportBtn.addEventListener("click", loadReport);
-shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
+
+
+shareWhatsAppBtn.addEventListener("click", function () {shareMenu.classList.toggle("hidden");
+});
+
+dailySummaryBtn.addEventListener("click", function () {
+
+    shareMenu.classList.add("hidden");
+
+    shareDailySummary();
+
+});
+closingFiguresBtn.addEventListener("click", function () {
+
+    shareMenu.classList.add("hidden");
+
+    shareWhatsApp();
+
+});
+
 
 async function loadReport() {
 
@@ -482,8 +510,120 @@ function updateDashboard(
         
 }
 
+function shareDailySummary() {
+
+    const footTraffic = prompt("Enter Foot Traffic:");
+
+    if (footTraffic === null) {
+        return;
+    }
+
+    const traffic = Number(footTraffic);
+
+    if (!traffic || traffic <= 0) {
+
+        alert("Please enter a valid Foot Traffic number.");
+
+        return;
+
+    }
+
+    const transactions =
+        Number(
+            document.getElementById("totalTransactions").textContent
+                .replace(/,/g, "")
+        );
+
+    const conversion =
+        (transactions / traffic) * 100;
+
+    const date =
+        document.getElementById("todayDate").textContent;
+
+    const totalSales =
+        document.getElementById("totalSales").textContent;
+
+    const qtySold =
+        document.getElementById("totalQty").textContent;
+
+    const averageSale =
+        document.getElementById("averageSale").textContent;
+
+    const upt =
+        document.getElementById("upt").textContent;
+
+    const dailyTarget =
+        document.getElementById("dailyTarget").textContent;
+
+    const variance =
+        document.getElementById("varianceTarget").textContent;
+
+    const percent =
+        (
+            Number(
+                document.getElementById("totalSales")
+                    .textContent
+                    .replace(/[R,\s]/g, "")
+            )
+            /
+            Number(
+                document.getElementById("dailyTarget")
+                    .textContent
+                    .replace(/[R,\s]/g, "")
+            )
+        ) * 100;
+
+    const now = new Date();
+
+    let hours = now.getHours();
+
+    const period = hours >= 12 ? "pm" : "am";
+
+    hours = hours % 12;
+
+    if (hours === 0) {
+        hours = 12;
+    }
+
+    const figureTime = `${hours}${period}`;
+
+    const message =
+`Good Evening Team
+
+Please see below our sales update.
+
+${date}
+
+Figures ${figureTime}
+
+Actual: ${totalSales}
+Target: ${dailyTarget}
+Var to Target: ${variance}
+Percentage To Target: ${percent.toFixed(2)}%
+################
+Trans: ${transactions}
+Units Sold: ${qtySold}
+Foot Traffic: ${traffic}(EST)
+Conversion: ${conversion.toFixed(1)}%
+AVT: ${averageSale}
+UPT: ${upt}`;
+
+    const whatsappUrl =
+        "https://wa.me/?text=" +
+        encodeURIComponent(message);
+
+    window.open(whatsappUrl, "_blank");
+}
+
 
 function shareWhatsApp() {
+
+    const now = new Date();
+
+    const figureTime = now.toLocaleTimeString("en-ZA", {
+    hour: "numeric",
+    hour12: true
+    });
 
     // Ask for foot traffic
     const footTrafficInput = prompt("Please enter Foot Traffic:");
@@ -578,7 +718,7 @@ Please see below our closing sales update.
 
 ${date}
 
-Figures 
+Figures ${figureTime}
 
 Monthly Target- ${monthlyTarget}
 
@@ -599,6 +739,7 @@ Foot Traffic: ${footTraffic}(EST)
 Conversion: ${conversion.toFixed(1)}%
 AVT: ${averageSale}
 UPT: ${upt}
+
 ################
 
 MTD: ${monthToDate}
