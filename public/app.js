@@ -658,19 +658,19 @@ Please see below our sales update.
 
 ${date}
 
-Figures ${figureTime}
+*Figures* ${figureTime}
 
-Actual: ${totalSales}
-Target: ${dailyTarget}
-Var to Target: ${variance}
-Percentage To Target: ${percent.toFixed(2)}%
-################
-Trans: ${transactions}
-Units Sold: ${qtySold}
-Foot Traffic: ${traffic}(EST)
-Conversion: ${conversion.toFixed(1)}%
-AVT: ${averageSale}
-UPT: ${upt}`;
+*Actual:* ${totalSales}
+*Target:* ${dailyTarget}
+*Var to Target:* ${variance}
+*Percentage To Target:* ${percent.toFixed(2)}%
+##################
+*Trans:* ${transactions}
+*Units Sold:* ${qtySold}
+*Foot Traffic:* ${traffic}(EST)
+*Conversion:* ${conversion.toFixed(1)}%
+*AVT:* ${averageSale}
+*UPT:* ${upt}`;
 
     const whatsappUrl =
         "https://wa.me/?text=" +
@@ -782,14 +782,14 @@ Please see below our closing sales update.
 
 ${date}
 
-Figures ${figureTime}
+*Figures* ${figureTime}
 
-Monthly Target- ${monthlyTarget}
+*Monthly Target:* ${monthlyTarget}
 
-Actual: ${totalSales}
-Target: ${dailyTarget}
-Var to Target: ${variance}
-Percentage To Target: ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[^0-9.-]+/g, "")) > 0
+*Actual:* ${totalSales}
+*Target:* ${dailyTarget}
+*Var to Target:* ${variance}
+*Percentage To Target:* ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[^0-9.-]+/g, "")) > 0
     ? (
         Number(totalSales.replace(/[^0-9.-]+/g, "")) /
         Number(dailyTarget.replace(/[^0-9.-]+/g, ""))
@@ -797,18 +797,18 @@ Percentage To Target: ${(transactionsNumber > 0 && Number(dailyTarget.replace(/[
     : 0
 ).toFixed(2)}%
 ################
-Trans: ${totalTransactions}
-Units Sold: ${totalQty}
-Foot Traffic: ${footTraffic}(EST)
-Conversion: ${conversion.toFixed(1)}%
-AVT: ${averageSale}
-UPT: ${upt}
+*Trans:* ${totalTransactions}
+*Units Sold:* ${totalQty}
+*Foot Traffic:* ${footTraffic}(EST)
+*Conversion:* ${conversion.toFixed(1)}%
+*AVT:* ${averageSale}
+*UPT:* ${upt}
 
 ################
 
-MTD: ${monthToDate}
-MTD Target: ${mtdTarget}
-Percentage to Target: ${(
+*MTD:* ${monthToDate}
+*MTD Target:* ${mtdTarget}
+*Percentage to Target:* ${(
     Number(monthlyTarget.replace(/[^0-9.-]+/g, "")) > 0
         ? (
             Number(monthToDate.replace(/[^0-9.-]+/g, "")) /
@@ -816,7 +816,7 @@ Percentage to Target: ${(
         ) * 100
         : 0
 ).toFixed(2)}%
-Projections: ${salesProjection}
+*Projections:* ${salesProjection}
 ################`;
 
     // Open WhatsApp
