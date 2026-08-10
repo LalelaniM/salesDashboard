@@ -652,7 +652,7 @@ function shareDailySummary() {
     const figureTime = `${hours}${period}`;
 
     const message =
-`Good Evening Team
+`Good Afternoon Team
 
 Please see below our sales update.
 
