@@ -559,7 +559,7 @@ if (actualPercent >= 100) {
 
 } else {
 
-    circle.style.stroke = "#3b82f6";
+    circle.style.stroke = "#00aeff";
 
 }
 
