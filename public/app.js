@@ -1,5 +1,6 @@
 
 const todayDate = document.getElementById("todayDate");
+const reportCreated = document.getElementById("reportCreated");
 const showReportBtn = document.getElementById("showReportBtn");
 const shareWhatsAppBtn = document.getElementById("shareWhatsAppBtn");
 const shareMenu =
@@ -44,6 +45,16 @@ closingFiguresBtn.addEventListener("click", function () {
 
 
 async function loadReport() {
+
+    const now = new Date();
+
+    reportCreated.textContent =
+        now.toLocaleTimeString("en-ZA", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false
+        });
+
 
     loading.classList.remove("hidden");
     error.classList.add("hidden");
